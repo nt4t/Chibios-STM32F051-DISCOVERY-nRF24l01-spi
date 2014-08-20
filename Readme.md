@@ -3,8 +3,7 @@ STM32F0-Discovery-example-code
 
 This is my example code for the STM32F0 Discovers using the RTOS ChibiOS.
 
-Based on https://github.com/wendlers/libemb/tree/master/libnrf24l01
-and https://github.com/omriiluz/libnrf24l01p
+Based on https://github.com/wendlers/libemb/tree/master/libnrf24l01, https://github.com/wendlers/libemb/tree/master/tests/nrf-client-sb and https://github.com/omriiluz/libnrf24l01p
 
 requirements
 ------------
