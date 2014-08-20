@@ -21,32 +21,6 @@ static const SPIConfig ls_spicfg = {
 };
 
 /*
- * SPI TX and RX buffers.
- */
-static uint8_t txbuf[512];
-static uint8_t rxbuf[512];
-
-/*
- * SPI bus contender 2.
- */
-static WORKING_AREA(spi_thread_2_wa, 256);
-static msg_t spi_thread_2(void *p) {
-
-  (void)p;
-  chRegSetThreadName("SPI thread 2");
-  while (TRUE) {
-    spiAcquireBus(&SPID2);              /* Acquire ownership of the bus.    */
-    palClearPad(GPIOC, GPIOC_LED4);     /* LED OFF.                         */
-    spiStart(&SPID2, &ls_spicfg);       /* Setup transfer parameters.       */
-    spiSelect(&SPID2);                  /* Slave Select assertion.          */
-    spiExchange(&SPID2, 512,
-                txbuf, rxbuf);          /* Atomic transfer operations.      */
-    spiUnselect(&SPID2);                /* Slave Select de-assertion.       */
-    spiReleaseBus(&SPID2);              /* Ownership release.               */
-  }
-  return 0;
-}
-/*
  * This is a periodic thread that does absolutely nothing except flashing
  * a LED.
  */
@@ -61,25 +35,6 @@ static msg_t blinker(void *arg) {
     palClearPad(GPIOC, GPIOC_LED3);
     chThdSleepMilliseconds(500);
   }
-}
-
-static uint8_t readByteSPI(uint8_t reg)
-{
-	char txbuf[2] = {0x80 | reg, 0xFF};
-	char rxbuf[2];
-	spiSelect(&SPID2);
-	spiExchange(&SPID2, 2, txbuf, rxbuf);
-	spiUnselect(&SPID2);
-	return rxbuf[1];
-}
-static uint8_t writeByteSPI(uint8_t reg, uint8_t val)
-{
-	char txbuf[2] = {reg, val};
-	char rxbuf[2];
-	spiSelect(&SPID2);
-	spiExchange(&SPID2, 2, txbuf, rxbuf);
-	spiUnselect(&SPID2);
-	return rxbuf[1];
 }
 
 void nrf_dump_regs(nrf_regs *r) {
@@ -191,16 +146,12 @@ int main(void) {
   // set payload size according to the payload size configured for the RX channel
   p.size = 1;
 
-  while (1) {
+  while (TRUE) {
     s = nrf_receive_blocking(&p);
 //    cio_printf("Received payload: %x; bytes received: %u\n\r", p.data[0], s);
     chprintf((BaseSequentialStream *) &SD2, "Received payload: %x; bytes received: %u\n\r", p.data[0], s );
     chThdSleepMilliseconds(100);
  }
-
-  while (TRUE) {
-    chThdSleepMilliseconds(100);
-  }
 
   return 0;
 }
