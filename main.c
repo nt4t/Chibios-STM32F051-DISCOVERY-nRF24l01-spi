@@ -65,12 +65,12 @@ void nrf_dump_regs(nrf_regs *r) {
 //		cio_print("\n\r - ");
 		chprintf((BaseSequentialStream *) &SD2,"\n\r - ");
 
-/*		for(j = 0; j < r->data[i].fields->count; j++) {
-			cio_printf("%u[%u]:%s=%u ", j,
+		for(j = 0; j < r->data[i].fields->count; j++) {
+		    chprintf((BaseSequentialStream *) &SD2, "%u[%u]:%s=%u ", j,
 				r->data[i].fields->data[j].size,
 				r->data[i].fields->data[j].name,
 				nrf_get_reg_field(i, j, &buf));
-		}*/
+		}
 
 		chprintf((BaseSequentialStream *) &SD2,"\n\r - ");
 	}

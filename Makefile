@@ -59,7 +59,7 @@ PROJECT = ch
 
 # Imported source files and paths
 #CHIBIOS = ../ChibiOS
-CHIBIOS = ../ChibiOS-RT-master
+CHIBIOS = ../../ChibiOS-RT-master
 include $(CHIBIOS)/boards/ST_STM32F0_DISCOVERY/board.mk
 include $(CHIBIOS)/os/hal/platforms/STM32F0xx/platform.mk
 include $(CHIBIOS)/os/hal/hal.mk
